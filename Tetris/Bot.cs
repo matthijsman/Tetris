@@ -289,35 +289,44 @@ namespace Tetris
 
         private void DoMoves()
         {
-            var block = GetBlockMatrix();
-            if (block == null)
+            var blocks = GetBlockMatrix();
+            if (blocks == null || blocks.Count == 0)
             {
                 Console.WriteLine("no_moves");
             }
             int bestScore = int.MaxValue;
             int bestX = 0;
-            for (int x = (0 - block.Width) + 2; x < _gamestate.Width - 1; x++)
+            int besti = 0;
+            for (int i = 0; i < blocks.Count; i++)
             {
-                for (int y = (0 - block.Height) + 2; y < _gamestate.Height; y++)
+                var block = blocks[i];
+                for (int x = (0 - block.Width) + 2; x < _gamestate.Width - 1; x++)
                 {
-
-                    var matrix = new Matrix(_gamestate, block, x, y);
-                    if (matrix.IsValid)
+                    for (int y = (0 - block.Height) + 2; y < _gamestate.Height; y++)
                     {
-                        int thisScore = GetScore(matrix);
-                        if(thisScore < bestScore)
+
+                        var matrix = new Matrix(_gamestate, block, x, y);
+                        if (matrix.IsValid)
                         {
-                            //Console.WriteLine("Score: " + thisScore);
-                            //Console.WriteLine(matrix);
-                            bestX = x;
-                            bestScore = thisScore;
+                            int thisScore = GetScore(matrix);
+                            if (thisScore < bestScore)
+                            {
+                                //Console.WriteLine("Score: " + thisScore);
+                                //Console.WriteLine(matrix);
+                                bestX = x;
+                                bestScore = thisScore;
+                                besti = i;
+                            }
                         }
                     }
                 }
             }
             string command = "";
             int steps = bestX - _blockX;
-
+            for(int j =0; j < besti; j++)
+            {
+                command += "turnleft,";
+            }
             for (int i = 0; i < Math.Abs(steps); i++)
             {
                 if (steps < 0)
@@ -350,24 +359,24 @@ namespace Tetris
             return score;
         }
 
-        private Matrix GetBlockMatrix()
+        private List<Matrix> GetBlockMatrix()
         {
             switch (_block)
             {
                 case "O":
-                    return new Matrix("2,2;2,2");
+                    return new List<Matrix> { new Matrix("2,2;2,2") };
                 case "I":
-                    return new Matrix("0,0,0,0;2,2,2,2;0,0,0,0;0,0,0,0");
+                    return new List<Matrix> { new Matrix("0,0,0,0;2,2,2,2;0,0,0,0;0,0,0,0"), new Matrix("0,2,0,0;0,2,0,0;0,2,0,0;0,2,0,0"), new Matrix("0,0,0,0;0,0,0,0;2,2,2,2;0,0,0,0"), new Matrix("0,0,2,0;0,0,2,0;0,0,2,0;0,0,2,0")};
                 case "J":
-                    return new Matrix("2,0,0;2,2,2;0,0,0");
+                    return new List<Matrix> { new Matrix("2,0,0;2,2,2;0,0,0") , new Matrix("0,2,0;0,2,0;2,2,0"), new Matrix("0,0,0;2,2,2;0,0,2"), new Matrix("0,2,2;0,2,0;0,2,0")};
                 case "L":
-                    return new Matrix("0,0,2;2,2,2;0,0,0");
+                    return new List<Matrix> { new Matrix("0,0,2;2,2,2;0,0,0"), new Matrix("2,2,0;0,2,0;0,2,0"), new Matrix("0,0,0;2,2,2;2,0,0"), new Matrix("0,2,0;0,2,0;0,2,2") };
                 case "Z":
-                    return new Matrix("2,2,0;0,2,2;0,0,0");
+                    return new List<Matrix> { new Matrix("2,2,0;0,2,2;0,0,0"), new Matrix("0,2,0;2,2,0;2,0,0"), new Matrix("0,0,0;2,2,0;0,2,2"), new Matrix("0,0,2;0,2,2;0,2,0") };
                 case "T":
-                    return new Matrix("0,2,0;2,2,2;0,0,0");
+                    return new List<Matrix> { new Matrix("0,2,0;2,2,2;0,0,0"), new Matrix("0,2,0;2,2,0;0,2,0"), new Matrix("0,0,0;2,2,2;0,2,0"), new Matrix("0,2,0;0,2,2;0,2,0") };
                 case "S":
-                    return new Matrix("0,2,2;2,2,0;0,0,0");
+                    return new List<Matrix> { new Matrix("0,2,2;2,2,0;0,0,0"), new Matrix("0,2,0;2,2,0;2,0,0"), new Matrix("0,0,0;2,2,0;0,2,2"), new Matrix("0,0,2;2,2,0;0,2,0") };
             }
             return null;
         }
