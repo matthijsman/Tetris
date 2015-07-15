@@ -149,5 +149,32 @@ namespace Tetris
             }
             return returnString;
         }
+
+        internal void RemoveFullLines()
+        {
+            bool lineFull = true;
+            for (int y = 0; y < Height; y++)
+            {
+                lineFull = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if(_matrix[x,y] == 0)
+                    {
+                        lineFull = false;
+                        break;
+                    }
+                }
+                if (lineFull)
+                {
+                    for (int suby = y; suby > 0; suby--)
+                    {
+                        for (int x = 0; x < Width; x++)
+                        {
+                            _matrix[x, suby] = _matrix[x, suby - 1];
+                        }
+                    }
+                }
+            }
+        }
     }
 }
