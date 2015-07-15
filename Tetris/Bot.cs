@@ -683,11 +683,12 @@ namespace Tetris
             {
                // score = GetSecondBlockScore(matrix);
             }
-            bool lineFull = true;
             int highestPoint = 0;
             bool highestPointSet = false;
             for(int y = matrix.Height-1; y >= 0; y--)
             {
+                bool lineFull = true;
+
                 for (int x=0; x < matrix.Width; x++)
                 {
                     //lager is beter
