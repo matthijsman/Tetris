@@ -26,7 +26,7 @@ namespace Tetris
         private string _nextBlock;
         private int _blockX;
         Matrix _gamestate;
-
+         
         public void Run()
         {
             while (true)
@@ -50,6 +50,7 @@ namespace Tetris
 
         private void DoDebugStuff()
         {
+            #region debug zut
             _debug = true;
             ParseLine("settings timebank 10000".Split(' '));
             ParseLine("settings time_per_move 500".Split(' '));
@@ -1268,7 +1269,7 @@ namespace Tetris
                         var matrix = new Matrix(_gamestate, block, x, y);
                         if ((y==0 || validPositions.Contains(new Triple (x,y-1,i))) && matrix.IsValid)
                         {
-                            validPositions.Add(new Triple(x, y,i));
+                            validPositions.Add(new Triple(x, y,i)); 
                             int thisScore = GetScore(matrix);
                             if (thisScore < bestScore)
                             {
@@ -1314,6 +1315,14 @@ namespace Tetris
            
             command += "drop";
             Console.WriteLine(command);
+        }
+
+        private void MoveStuff()
+        {
+            List<Triple> triedMoves = new List<Triple>();
+            string bestRoute = "";
+            int bestScore = int.MaxValue;
+
         }
 
         private int GetScore(Matrix matrix, bool calculateNextBlock = true)
