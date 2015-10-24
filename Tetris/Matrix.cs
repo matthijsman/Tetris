@@ -152,10 +152,9 @@ namespace Tetris
 
         internal void RemoveFullLines()
         {
-            bool lineFull = true;
             for (int y = 0; y < Height; y++)
             {
-                lineFull = true;
+                bool lineFull = true;
                 for (int x = 0; x < Width; x++)
                 {
                     if(_matrix[x,y] == 0)
