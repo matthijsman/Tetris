@@ -33,7 +33,7 @@ namespace Tetris
         {
             IsValid = true;
             CopyMatrix(baseMatrix);
-            Normalize();
+            //Normalize();
             Add(blockMatrix, xpos, ypos);
         }
 
@@ -58,14 +58,16 @@ namespace Tetris
         private void CopyMatrix(Matrix matrix)
         {
             _matrix = new int[matrix.Width, matrix.Height];
-            Height = matrix.Height;
-            Width = matrix.Width;
+            var height = matrix.Height;
+            var width = matrix.Width;
+            Height = height;
+            Width = width;
 
-            for (int x = 0; x < Width; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < Height; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    _matrix[x, y] = matrix[x, y];
+                    _matrix[x, y] = matrix[x, y] != 0 ? 1 : 0;
                 }
 
             }
@@ -75,9 +77,11 @@ namespace Tetris
 
         public void Normalize()
         {
-            for (int x = 0; x < Width; x++)
+            var height = Height;
+            var width = Width;
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < Height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     _matrix[x, y] = _matrix[x, y] == 0 ? 0 : 1;
                 }
@@ -100,17 +104,17 @@ namespace Tetris
                 {
                     var finalX = x + xPos;
                     var finalY = y + yPos;
-                    if(finalX <0 && matrix[x,y] != 0)
+                    if (finalX < 0 && matrix[x, y] != 0)
                     {
                         IsValid = false;
                         return;
                     }
-                    if(finalX >= Width && matrix[x,y] != 0)
+                    if (finalX >= Width && matrix[x, y] != 0)
                     {
                         IsValid = false;
                         return;
                     }
-                    if(finalY >= Height && matrix[x,y] != 0)
+                    if (finalY >= Height && matrix[x, y] != 0)
                     {
                         IsValid = false;
                         return;
@@ -122,9 +126,9 @@ namespace Tetris
                         return;
                     }
 
-                    if (matrix[x,y] != 0 && finalX >= 0 && finalX < Width && finalY >= 0 && finalY < Height)
+                    if (matrix[x, y] != 0 && finalX >= 0 && finalX < Width && finalY >= 0 && finalY < Height)
                     {
-                        if(_matrix[finalX,finalY] != 0)
+                        if (_matrix[finalX, finalY] != 0)
                         {
                             IsValid = false;
                             return;
@@ -135,29 +139,59 @@ namespace Tetris
             }
         }
 
+        public bool CanAdd(Matrix block, int x, int y)
+        {
+            var height = block.Height;
+            var width = block.Width;
+            for (var i = 0; i < height; i++)
+            {
+                for (var j = 0; j < width; j++)
+                {
+
+                    //if ((x + i) >= 0 && (x + i) < 10 && (y + j) >= 0 && (y + j) < 20)
+                    //{
+                    
+                        if (block._matrix[i, j] != 0 && ((y+j) > 19 || (x+i) > 9 ||_matrix[x + i, y + j] != 0))
+                        {
+                            return false;
+                        }
+                    //}
+                    //else
+                    //{
+                    //    return false;
+                    //}
+                }
+            }
+            return true;
+        }
+
         public override string ToString()
         {
+            var height = Height;
+            var width = Width;
             string returnString = "";
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < height; y++)
             {
                 returnString += "|";
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < width; x++)
                 {
-                    returnString += _matrix[x, y] == 0 ? (y == Height - 1 ? "_" : " ") : "X";
+                    returnString += _matrix[x, y] == 0 ? (y == height - 1 ? "___" : "   ") : "[X]";
                 }
-                returnString += "|"+Environment.NewLine;
+                returnString += "|" + y + Environment.NewLine;
             }
             return returnString;
         }
 
         internal void RemoveFullLines()
         {
-            for (int y = 0; y < Height; y++)
+            var height = Height;
+            var width = Width;
+            for (int y = 0; y < height; y++)
             {
                 bool lineFull = true;
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < width; x++)
                 {
-                    if(_matrix[x,y] == 0)
+                    if (_matrix[x, y] == 0)
                     {
                         lineFull = false;
                         break;
@@ -167,7 +201,7 @@ namespace Tetris
                 {
                     for (int suby = y; suby > 0; suby--)
                     {
-                        for (int x = 0; x < Width; x++)
+                        for (int x = 0; x < width; x++)
                         {
                             _matrix[x, suby] = _matrix[x, suby - 1];
                         }

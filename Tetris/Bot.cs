@@ -26,8 +26,10 @@ namespace Tetris
         private string _block;
         private string _nextBlock;
         private int _blockX;
+
+        private const int ValidPosOffset =5;
         Matrix _gamestate;
-         
+
         public void Run()
         {
             while (true)
@@ -48,11 +50,12 @@ namespace Tetris
                 }
             }
         }
-
+        private double time = 10000;
         private void DoDebugStuff()
         {
             #region debug zut
             _debug = true;
+            
             ParseLine("settings timebank 10000".Split(' '));
             ParseLine("settings time_per_move 500".Split(' '));
             ParseLine("settings player_names player1,player2".Split(' '));
@@ -69,193 +72,282 @@ namespace Tetris
             ParseLine("update player2 field 0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0".Split(' '));
             ParseLine("update player2 row_points 0".Split(' '));
             ParseLine("update player2 combo 0".Split(' '));
+            var start = DateTime.Now;
             ParseLine("action moves 10000".Split(' '));
+            var timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
             ParseLine("update game round 2".Split(' '));
             ParseLine("update game this_piece_type L".Split(' '));
-            ParseLine("update game next_piece_type S".Split(' '));
+            ParseLine("update game next_piece_type J".Split(' '));
             ParseLine("update game this_piece_position 3,-1".Split(' '));
             ParseLine("update player1 row_points 0".Split(' '));
             ParseLine("update player1 combo 0".Split(' '));
             ParseLine("update player2 row_points 0".Split(' '));
             ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
             ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 3".Split(' '));
-            //ParseLine("update game this_piece_type J".Split(' '));
-            //ParseLine("update game next_piece_type T".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 0".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,0,0,0,0,0,0,0,0;2,2,2,2,2,2,2,0,0,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 4".Split(' '));
-            //ParseLine("update game this_piece_type T".Split(' '));
-            //ParseLine("update game next_piece_type O".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 1".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,0,0,0,0,0,2,0,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 5".Split(' '));
-            //ParseLine("update game this_piece_type O".Split(' '));
-            //ParseLine("update game next_piece_type L".Split(' '));
-            //ParseLine("update game this_piece_position 4,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,0,0,0,0,0,0;2,2,0,0,0,0,0,0,0,0;2,2,0,0,0,0,0,2,0,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 6".Split(' '));
-            //ParseLine("update game this_piece_type L".Split(' '));
-            //ParseLine("update game next_piece_type O".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,0,0,0,0,0,0;2,2,2,2,0,0,0,0,0,0;2,2,2,2,0,0,0,2,0,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 7".Split(' '));
-            //ParseLine("update game this_piece_type O".Split(' '));
-            //ParseLine("update game next_piece_type J".Split(' '));
-            //ParseLine("update game this_piece_position 4,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,0,0,0,0,0,0;2,2,2,2,0,0,2,0,0,0;2,2,2,2,2,2,2,2,0,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 8".Split(' '));
-            //ParseLine("update game this_piece_type J".Split(' '));
-            //ParseLine("update game next_piece_type O".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,2,2,0,0,0,0;2,2,2,2,2,2,2,0,0,0;2,2,2,2,2,2,2,2,0,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //Console.ReadLine();
-            //ParseLine("update game round 9".Split(' '));
-            //ParseLine("update game this_piece_type O".Split(' '));
-            //ParseLine("update game next_piece_type I".Split(' '));
-            //ParseLine("update game this_piece_position 4,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,2,2,0,0,2,2;2,2,2,2,2,2,2,0,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 10".Split(' '));
-            //ParseLine("update game this_piece_type I".Split(' '));
-            //ParseLine("update game next_piece_type I".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,2,0,0,0,0,0,0,0;2,2,2,0,2,2,0,0,2,2;2,2,2,2,2,2,2,0,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 11".Split(' '));
-            //ParseLine("update game this_piece_type I".Split(' '));
-            //ParseLine("update game next_piece_type T".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,2,0,0;0,2,2,0,0,0,0,2,0,0;2,2,2,0,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 12".Split(' '));
-            //ParseLine("update game this_piece_type T".Split(' '));
-            //ParseLine("update game next_piece_type T".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,0,0,0,2,0,0;0,2,2,2,0,0,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,2,2,2,0,0,0,0,0,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 13".Split(' '));
-            //ParseLine("update game this_piece_type T".Split(' '));
-            //ParseLine("update game next_piece_type L".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,2,0,0,0,0,0,0;2,2,0,2,0,0,0,2,0,0;2,2,2,2,0,0,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 14".Split(' '));
-            //ParseLine("update game this_piece_type L".Split(' '));
-            //ParseLine("update game next_piece_type Z".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;2,0,0,2,0,0,2,2,0,0;2,2,0,2,0,0,2,2,0,0;2,2,2,2,0,0,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,2,0,0;0,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 15".Split(' '));
-            //ParseLine("update game this_piece_type Z".Split(' '));
-            //ParseLine("update game next_piece_type Z".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;2,0,0,2,2,0,2,2,0,0;2,2,0,2,2,0,2,2,0,0;2,2,2,2,2,2,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;2,2,2,0,0,0,2,2,0,0;2,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 16".Split(' '));
-            //ParseLine("update game this_piece_type Z".Split(' '));
-            //ParseLine("update game next_piece_type I".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,2,0,0,0,0,2,0,0,0;2,2,2,2,2,0,2,2,0,0;2,2,0,2,2,0,2,2,0,0;2,2,2,2,2,2,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,2,0;0,0,0,0,0,0,0,2,2,0;0,0,0,0,0,0,2,2,0,0;2,2,2,0,0,0,2,2,0,0;2,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 17".Split(' '));
-            //ParseLine("update game this_piece_type I".Split(' '));
-            //ParseLine("update game next_piece_type J".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,2,0,0,0,0,2,0,0,0;2,2,2,2,2,0,2,2,0,2;2,2,0,2,2,0,2,2,2,2;2,2,2,2,2,2,0,2,2,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,2,0,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,0,2,2,0,0;2,2,2,0,0,0,2,2,0,0;2,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
-            //ParseLine("update game round 18".Split(' '));
-            //ParseLine("update game this_piece_type J".Split(' '));
-            //ParseLine("update game next_piece_type J".Split(' '));
-            //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player1 row_points 1".Split(' '));
-            //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,0,0,0,0;2,2,0,0,0,2,2,0,0,0;2,2,2,2,2,2,2,2,0,2;2,2,0,2,2,2,2,2,2,2;2,2,2,2,2,2,0,2,2,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,2,0,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,2,2,2,0,0;2,2,2,0,0,2,2,2,0,0;2,0,0,0,0,2,2,2,0,0;2,2,2,2,0,2,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
-            //ParseLine("update player2 row_points 0".Split(' '));
-            //ParseLine("update player2 combo 0".Split(' '));
-            //ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 3".Split(' '));
+            ParseLine("update game this_piece_type J".Split(' '));
+            ParseLine("update game next_piece_type T".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 0".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,0,0,0,0,0,0,0,0;2,2,2,2,2,2,2,0,0,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 4".Split(' '));
+            ParseLine("update game this_piece_type T".Split(' '));
+            ParseLine("update game next_piece_type O".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 1".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,0,0,0,0,0,2,0,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 5".Split(' '));
+            ParseLine("update game this_piece_type O".Split(' '));
+            ParseLine("update game next_piece_type L".Split(' '));
+            ParseLine("update game this_piece_position 4,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,0,0,0,0,0,0;2,2,0,0,0,0,0,0,0,0;2,2,0,0,0,0,0,2,0,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 6".Split(' '));
+            ParseLine("update game this_piece_type L".Split(' '));
+            ParseLine("update game next_piece_type O".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,0,0,0,0,0,0;2,2,2,2,0,0,0,0,0,0;2,2,2,2,0,0,0,2,0,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 7".Split(' '));
+            ParseLine("update game this_piece_type O".Split(' '));
+            ParseLine("update game next_piece_type J".Split(' '));
+            ParseLine("update game this_piece_position 4,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,0,0,0,0,0,0;2,2,2,2,0,0,2,0,0,0;2,2,2,2,2,2,2,2,0,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 8".Split(' '));
+            ParseLine("update game this_piece_type J".Split(' '));
+            ParseLine("update game next_piece_type O".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,2,2,0,0,0,0;2,2,2,2,2,2,2,0,0,0;2,2,2,2,2,2,2,2,0,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 9".Split(' '));
+            ParseLine("update game this_piece_type O".Split(' '));
+            ParseLine("update game next_piece_type I".Split(' '));
+            ParseLine("update game this_piece_position 4,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,2,2,0,0,2,2;2,2,2,2,2,2,2,0,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 10".Split(' '));
+            ParseLine("update game this_piece_type I".Split(' '));
+            ParseLine("update game next_piece_type I".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,2,0,0,0,0,0,0,0;2,2,2,0,2,2,0,0,2,2;2,2,2,2,2,2,2,0,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 11".Split(' '));
+            ParseLine("update game this_piece_type I".Split(' '));
+            ParseLine("update game next_piece_type T".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,2,0,0;0,2,2,0,0,0,0,2,0,0;2,2,2,0,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 12".Split(' '));
+            ParseLine("update game this_piece_type T".Split(' '));
+            ParseLine("update game next_piece_type T".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,0,0,0,2,0,0;0,2,2,2,0,0,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,2,2,2,0,0,0,0,0,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 13".Split(' '));
+            ParseLine("update game this_piece_type T".Split(' '));
+            ParseLine("update game next_piece_type L".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,2,0,0,0,0,0,0;2,2,0,2,0,0,0,2,0,0;2,2,2,2,0,0,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 14".Split(' '));
+            ParseLine("update game this_piece_type L".Split(' '));
+            ParseLine("update game next_piece_type Z".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;2,0,0,2,0,0,2,2,0,0;2,2,0,2,0,0,2,2,0,0;2,2,2,2,0,0,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,2,0,0;0,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 15".Split(' '));
+            ParseLine("update game this_piece_type Z".Split(' '));
+            ParseLine("update game next_piece_type Z".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;2,0,0,2,2,0,2,2,0,0;2,2,0,2,2,0,2,2,0,0;2,2,2,2,2,2,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;2,2,2,0,0,0,2,2,0,0;2,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 16".Split(' '));
+            ParseLine("update game this_piece_type Z".Split(' '));
+            ParseLine("update game next_piece_type I".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,2,0,0,0,0,2,0,0,0;2,2,2,2,2,0,2,2,0,0;2,2,0,2,2,0,2,2,0,0;2,2,2,2,2,2,0,2,0,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,2,0;0,0,0,0,0,0,0,2,2,0;0,0,0,0,0,0,2,2,0,0;2,2,2,0,0,0,2,2,0,0;2,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 17".Split(' '));
+            ParseLine("update game this_piece_type I".Split(' '));
+            ParseLine("update game next_piece_type J".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,2,0,0,0,0,2,0,0,0;2,2,2,2,2,0,2,2,0,2;2,2,0,2,2,0,2,2,2,2;2,2,2,2,2,2,0,2,2,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,1,0,0,0;0,0,0,0,0,0,0,2,0,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,0,2,2,0,0;2,2,2,0,0,0,2,2,0,0;2,0,0,0,0,0,2,2,0,0;2,2,2,2,0,0,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
+            ParseLine("update game round 18".Split(' '));
+            ParseLine("update game this_piece_type J".Split(' '));
+            ParseLine("update game next_piece_type J".Split(' '));
+            ParseLine("update game this_piece_position 3,-1".Split(' '));
+            ParseLine("update player1 row_points 1".Split(' '));
+            ParseLine("update player1 combo 0".Split(' '));
+            ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,0,0,0,0;2,2,0,0,0,2,2,0,0,0;2,2,2,2,2,2,2,2,0,2;2,2,0,2,2,2,2,2,2,2;2,2,2,2,2,2,0,2,2,0;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0".Split(' '));
+            ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,2,0,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,0,2,2,2,0;0,0,0,0,0,2,2,2,0,0;2,2,2,0,0,2,2,2,0,0;2,0,0,0,0,2,2,2,0,0;2,2,2,2,0,2,2,2,2,0;0,2,2,2,2,2,2,0,0,0;0,0,0,2,2,2,2,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,0,0;0,0,2,0,2,0,0,0,0,0;0,2,2,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
+            ParseLine("update player2 row_points 0".Split(' '));
+            ParseLine("update player2 combo 0".Split(' '));
+            start = DateTime.Now;
+            ParseLine("action moves 10000".Split(' '));
+            timeUsed = (DateTime.Now - start).TotalMilliseconds;
+            time -= timeUsed;
+            Console.WriteLine("Time to get solution: " + timeUsed + " time left: " + time);
+            time += 500;
 
 
             #endregion
@@ -342,11 +434,13 @@ namespace Tetris
 
         private void ParseField(string field)
         {
-            if (!_debug || _gamestate==null)
+            if (!_debug || _gamestate == null)
             {
                 _gamestate = new Matrix(field);
             }
         }
+
+        private int _startY = 0;
 
         private void DoMoves()
         {
@@ -355,60 +449,67 @@ namespace Tetris
             {
                 Console.WriteLine("no_moves");
             }
+            _startY = findStartY();
             int bestScore = int.MaxValue;
             string bestRoute = "";
             Matrix bestMatrix = null;
-            Dictionary<Triple,string> validPositions = new Dictionary<Triple,string>();
+            string [,,] validPositions = new string[20+ValidPosOffset,20 + ValidPosOffset, 20 + ValidPosOffset];
             for (int i = 0; i < blocks.Count; i++)
             {
                 var block = blocks[i];
                 for (int x = (0 - block.Width) + 2; x < _gamestate.Width - 1; x++)
                 {
-                    for (int y = (0); y < _height; y++)
+                    for (int y = _startY; y < _height; y++)
                     {
 
                         var matrix = new Matrix(_gamestate, block, x, y);
-                        string route = GetValidRoute(x,y,i, validPositions);
+                        string route = GetValidRoute(x, y, i, validPositions);
+                        bool endpos = matrix.IsValid && !_gamestate.CanAdd(block, x, y + 1);
                         if (!string.IsNullOrEmpty(route) && matrix.IsValid)
                         {
-                            validPositions.Add(new Triple(x, y,i),route);
-
-                            int thisScore = GetScore(matrix);
-                            if (thisScore < bestScore)
+                            validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = route;
+                            if (endpos)
                             {
-                                //Console.Error.WriteLine("Score: " + thisScore);
-                                //Console.Error.WriteLine(matrix);
-                                bestScore = thisScore;
-                                bestMatrix = matrix;
-                                bestRoute = route;
+                                int thisScore = GetScore(matrix);
+                                if (thisScore < bestScore)
+                                {
+                                    //Console.Error.WriteLine("Score: " + thisScore);
+                                    //Console.Error.WriteLine(matrix);
+                                    bestScore = thisScore;
+                                    bestMatrix = matrix;
+                                    bestRoute = route;
+                                }
                             }
                         }
                     }
                 }
 
-                for (int x = _gamestate.Width - 2 ; x > (0 - block.Width) + 3; x--)
+                for (int x = _gamestate.Width - 2; x > (0 - block.Width) + 3; x--)
                 {
-                    for (int y = _height-1; y >= 0 ; y--)
+                    for (int y = _height - 1; y >= _startY; y--)
                     {
 
                         var matrix = new Matrix(_gamestate, block, x, y);
-                        if(validPositions.ContainsKey(new Triple(x, y, i)))
+                        bool endpos = matrix.IsValid && !_gamestate.CanAdd(block, x, y + 1);
+                        if (!string.IsNullOrEmpty(validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset]))
                         {
                             continue;
                         }
                         string route = GetValidRoute(x, y, i, validPositions);
                         if (!string.IsNullOrEmpty(route) && matrix.IsValid)
                         {
-                            validPositions.Add(new Triple(x, y, i), route);
-
-                            int thisScore = GetScore(matrix);
-                            if (thisScore < bestScore)
+                            validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = route;
+                            if (endpos)
                             {
-                                //Console.Error.WriteLine("Score: " + thisScore);
-                                //Console.Error.WriteLine(matrix);
-                                bestScore = thisScore;
-                                bestMatrix = matrix;
-                                bestRoute = route;
+                                int thisScore = GetScore(matrix);
+                                if (thisScore < bestScore)
+                                {
+                                    //Console.Error.WriteLine("Score: " + thisScore);
+                                    //Console.Error.WriteLine(matrix);
+                                    bestScore = thisScore;
+                                    bestMatrix = matrix;
+                                    bestRoute = route;
+                                }
                             }
                         }
                     }
@@ -416,6 +517,12 @@ namespace Tetris
             }
             if (_debug)
             {
+                if(bestMatrix == null)
+                {
+                    Console.Error.WriteLine(_gamestate);
+                    Console.Error.WriteLine(_startY);
+                    Console.WriteLine("fuk");
+                }
                 _gamestate = bestMatrix;
                 if (_gamestate != null)
                 {
@@ -423,35 +530,35 @@ namespace Tetris
                 }
                 Console.Error.WriteLine(bestMatrix);
             }
-            //
-            //string command = "";
-            //int steps = bestX - _blockX;
-            //for(int j =0; j < besti; j++)
-            //{
-            //    command += "turnleft,";
-            //}
-            //for (int i = 0; i < Math.Abs(steps); i++)
-            //{
-            //    if (steps < 0)
-            //    {
-            //        command += "left,";
-            //    }
-            //    if(steps > 0)
-            //    {
-            //        command += "right,";
-            //    }
-            //}
-           
-            //command += "drop";
+
             Console.WriteLine(bestRoute);
         }
 
-        private string GetValidRoute(int x, int y, int i, Dictionary<Triple, string> validPositions)
+        private int findStartY()
+        {
+            int highestPoint = 0;
+            for (int y = 0; y > _height; y++)
+            {
+                for (int x = 0; x < _gamestate.Width; x++)
+                {
+                    if (_gamestate[x, y] != 0)
+                    {
+                        return Math.Max(y,0);
+                    }
+                }
+            }
+            return 0;
+        }
+
+        private string GetValidRoute(int x, int y, int i, string[,,] validPositions)
         {
             string route = "";
-            if (y == 0)
+            if (y <= _startY)
             {
-                
+                for (int j = 0; j < _startY; j++)
+                {
+                    route += "down,";
+                }
                 int steps = x - _blockX;
                 for (int j = 0; j < i; j++)
                 {
@@ -468,29 +575,29 @@ namespace Tetris
                         route += "right,";
                     }
                 }
-                route += "down";
+                route += "down,";
                 route = route.Trim(',');
             }
             //else there is already a route near this one. get the route from that pos and add the step we need to get here.
-            if (validPositions.ContainsKey(new Triple(x - 1, y, i)))
+            if (!string.IsNullOrEmpty(validPositions[x - 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset]))
             {
-                return validPositions[new Triple(x - 1, y, i)] + "," + "right";
+                return validPositions[x - 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] + "," + "right";
             }
-            if (validPositions.ContainsKey(new Triple(x + 1, y, i)))
+            if (!string.IsNullOrEmpty(validPositions[x + 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset]))
             {
-                return validPositions[new Triple(x + 1, y, i)] + "," + "left";
+                return validPositions[x + 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] + "," + "left";
             }
-            if (validPositions.ContainsKey(new Triple(x, y-1, i)))
+            if (!string.IsNullOrEmpty(validPositions[x + ValidPosOffset, y - 1 + ValidPosOffset, i + ValidPosOffset]))
             {
-                return validPositions[new Triple(x, y-1, i)] + "," + "down";
+                return validPositions[x + ValidPosOffset, y - 1 + ValidPosOffset, i + ValidPosOffset] + "," + "down";
             }
-            if (validPositions.ContainsKey(new Triple(x, y, i-1)))
+            if (!string.IsNullOrEmpty(validPositions[x + ValidPosOffset, y + ValidPosOffset, i - 1 + ValidPosOffset]))
             {
-                return validPositions[new Triple(x, y, i-1)] + "," + "turnleft";
+                return validPositions[x + ValidPosOffset, y + ValidPosOffset, i - 1 + ValidPosOffset] + "," + "turnleft";
             }
-            if (validPositions.ContainsKey(new Triple(x, y, i + 1)))
+            if (!string.IsNullOrEmpty(validPositions[x + ValidPosOffset, y + ValidPosOffset, i + 1 + ValidPosOffset]))
             {
-                return validPositions[new Triple(x, y, i + 1)] + "," + "turnright";
+                return validPositions[x + ValidPosOffset, y + ValidPosOffset, i + 1 + ValidPosOffset] + "," + "turnright";
             }
             return route;
         }
@@ -508,22 +615,22 @@ namespace Tetris
             int score = 0;
             if (calculateNextBlock)
             {
-               // score = GetSecondBlockScore(matrix);
+                score = GetSecondBlockScore(matrix);
             }
             int highestPoint = 0;
             bool highestPointSet = false;
-            for(int y = matrix.Height-1; y >= 0; y--)
+            for (int y = matrix.Height - 1; y >= 0; y--)
             {
                 bool lineFull = true;
 
-                for (int x=0; x < matrix.Width; x++)
+                for (int x = 0; x < matrix.Width; x++)
                 {
                     //lager is beter
-                    if(matrix[x,y] != 0)
+                    if (matrix[x, y] != 0)
                     {
                         if (!highestPointSet)
                         {
-                            score += (matrix.Height - y);
+                            score+= (matrix.Height - y);
                             highestPoint = y;
                         }
                     }
@@ -532,9 +639,9 @@ namespace Tetris
                         lineFull = false;
                     }
                     //gaatjes zijn slechter
-                    if(y>0 && matrix[x,y]==0)
+                    if (y > 0 && matrix[x, y] == 0)
                     {
-                        
+
                         var suby = y - 1;
                         var foundFilledIn = false;
                         var penalty = 0;
@@ -556,46 +663,98 @@ namespace Tetris
                     //lijnen weghalen is goed
                     if (lineFull)
                     {
-                        score --;
+                        score--;
                     }
                 }
             }
             //lager in totaal is beter
-            return score + ((_gamestate.Height - highestPoint ) );
+            return score + ((_gamestate.Height - highestPoint));
         }
 
         private int GetSecondBlockScore(Matrix matrix)
         {
+            var start = findStartY();
             var blocks = GetBlockMatrix(_nextBlock);
             if (blocks == null || blocks.Count == 0)
             {
                 return 10000;
             }
             int bestScore = int.MaxValue;
-            List<Triple> validPositions = new List<Triple>();
+            bool[,,] validPositions = new bool[20 + ValidPosOffset, 20 + ValidPosOffset, 20 + ValidPosOffset];
             for (int i = 0; i < blocks.Count; i++)
             {
                 var block = blocks[i];
-                for (int x = (0 - block.Width) + 2; x < matrix.Width - 1; x++)
+                for (int x = (0 - block.Width) + 2; x < _gamestate.Width - 1; x++)
                 {
-                    for (int y = (0 - block.Height) + 2; y < matrix.Height; y++)
+                    for (int y = (start); y < _height; y++)
                     {
 
-                        var newMatrix = new Matrix(_gamestate, block, x, y);
-                        if ((y == 0 || validPositions.Contains(new Triple(x, y - 1,i))) && newMatrix.IsValid)
+                        var newmatrix = new Matrix(_gamestate, block, x, y);
+                        bool endpos = newmatrix.IsValid && !_gamestate.CanAdd(block, x, y + 1);
+                        if (matrix.IsValid)
                         {
-                            validPositions.Add(new Triple(x, y,i));
-                            int thisScore = GetScore(matrix, false);
-                            if (thisScore < bestScore)
+                            validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = true;
+                            if (endpos)
                             {
-                                //Console.WriteLine("Score: " + thisScore);
-                                //Console.WriteLine(matrix);
-                                bestScore = thisScore;
+                                int thisScore = GetScore(matrix, false);
+                                if (thisScore < bestScore)
+                                {
+                                    bestScore = thisScore;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (int x = _gamestate.Width - 2; x > (0 - block.Width) + 3; x--)
+                {
+                    for (int y = _height - 1; y >= start; y--)
+                    {
+
+                        var newmatrix = new Matrix(_gamestate, block, x, y);
+                        bool endpos = matrix.IsValid && !_gamestate.CanAdd(block, x, y + 1);
+                        if (validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset])
+                        {
+                            continue;
+                        }
+                        if (matrix.IsValid)
+                        {
+                            validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = true;
+                            if (endpos)
+                            {
+                                int thisScore = GetScore(matrix, false);
+                                if (thisScore < bestScore)
+                                {
+                                    bestScore = thisScore;
+                                }
                             }
                         }
                     }
                 }
             }
+            //for (int i = 0; i < blocks.Count; i++)
+            //{
+            //    var block = blocks[i];
+            //    for (int x = (0 - block.Width) + 2; x < matrix.Width - 1; x++)
+            //    {
+            //        for (int y = (0 - block.Height) + 2; y < matrix.Height; y++)
+            //        {
+
+            //            var newMatrix = new Matrix(_gamestate, block, x, y);
+            //            if ((y == 0 || validPositions.Contains(new Triple(x, y - 1,i))) && newMatrix.IsValid)
+            //            {
+            //                validPositions.Add(new Triple(x, y,i));
+            //                int thisScore = GetScore(matrix, false);
+            //                if (thisScore < bestScore)
+            //                {
+            //                    //Console.WriteLine("Score: " + thisScore);
+            //                    //Console.WriteLine(matrix);
+            //                    bestScore = thisScore;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
             return bestScore;
         }
 
@@ -606,9 +765,9 @@ namespace Tetris
                 case "O":
                     return new List<Matrix> { new Matrix("2,2;2,2") };
                 case "I":
-                    return new List<Matrix> { new Matrix("0,0,0,0;2,2,2,2;0,0,0,0;0,0,0,0"), new Matrix("0,2,0,0;0,2,0,0;0,2,0,0;0,2,0,0"), new Matrix("0,0,0,0;0,0,0,0;2,2,2,2;0,0,0,0"), new Matrix("0,0,2,0;0,0,2,0;0,0,2,0;0,0,2,0")};
+                    return new List<Matrix> { new Matrix("0,0,0,0;2,2,2,2;0,0,0,0;0,0,0,0"), new Matrix("0,2,0,0;0,2,0,0;0,2,0,0;0,2,0,0"), new Matrix("0,0,0,0;0,0,0,0;2,2,2,2;0,0,0,0"), new Matrix("0,0,2,0;0,0,2,0;0,0,2,0;0,0,2,0") };
                 case "J":
-                    return new List<Matrix> { new Matrix("2,0,0;2,2,2;0,0,0") , new Matrix("0,2,0;0,2,0;2,2,0"), new Matrix("0,0,0;2,2,2;0,0,2"), new Matrix("0,2,2;0,2,0;0,2,0")};
+                    return new List<Matrix> { new Matrix("2,0,0;2,2,2;0,0,0"), new Matrix("0,2,0;0,2,0;2,2,0"), new Matrix("0,0,0;2,2,2;0,0,2"), new Matrix("0,2,2;0,2,0;0,2,0") };
                 case "L":
                     return new List<Matrix> { new Matrix("0,0,2;2,2,2;0,0,0"), new Matrix("2,2,0;0,2,0;0,2,0"), new Matrix("0,0,0;2,2,2;2,0,0"), new Matrix("0,2,0;0,2,0;0,2,2") };
                 case "Z":
