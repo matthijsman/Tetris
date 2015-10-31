@@ -26,7 +26,7 @@ namespace Tetris
         private string _block;
         private string _nextBlock;
         private int _blockX;
-
+        private int _skips = 0;
         private const int ValidPosOffset =5;
         Matrix _gamestate;
 
@@ -150,6 +150,7 @@ namespace Tetris
             ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
             ParseLine("update player2 row_points 0".Split(' '));
             ParseLine("update player2 combo 0".Split(' '));
+            ParseLine("update player1 skips 1".Split(' '));
             start = DateTime.Now;
             ParseLine("action moves 10000".Split(' '));
             timeUsed = (DateTime.Now - start).TotalMilliseconds;
@@ -166,6 +167,7 @@ namespace Tetris
             ParseLine("update player2 field 0,0,0,0,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,0,2,2,2,0,0,0,0;0,0,0,0,2,0,0,0,0,0;0,0,0,0,2,0,0,2,2,2;0,0,2,2,2,2,0,0,2,0".Split(' '));
             ParseLine("update player2 row_points 0".Split(' '));
             ParseLine("update player2 combo 0".Split(' '));
+            ParseLine("update player1 skips 0".Split(' '));
             start = DateTime.Now;
             ParseLine("action moves 10000".Split(' '));
             timeUsed = (DateTime.Now - start).TotalMilliseconds;
@@ -429,6 +431,10 @@ namespace Tetris
                         ParseField(lineArray[1]);
                     }
                     break;
+                case "skips":
+                    _skips = int.Parse(lineArray[1]);
+                    break;
+
             }
         }
 
@@ -450,9 +456,15 @@ namespace Tetris
                 Console.WriteLine("no_moves");
             }
             _startY = findStartY();
-            int bestScore = int.MaxValue;
+            double bestScore = double.MinValue;
             string bestRoute = "";
             Matrix bestMatrix = null;
+            if (_skips > 0)
+            {
+                bestMatrix = new Matrix(_gamestate, new Matrix(0, 0), 0, _gamestate.Height);
+                bestScore = bestMatrix.Score;
+                bestRoute = "skip";
+            }
             string [,,] validPositions = new string[20+ValidPosOffset,20 + ValidPosOffset, 20 + ValidPosOffset];
             for (int i = 0; i < blocks.Count; i++)
             {
@@ -470,8 +482,8 @@ namespace Tetris
                             validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = route;
                             if (endpos)
                             {
-                                int thisScore = GetScore(matrix);
-                                if (thisScore < bestScore)
+                                double thisScore = GetScore(matrix);
+                                if (thisScore > bestScore)
                                 {
                                     //Console.Error.WriteLine("Score: " + thisScore);
                                     //Console.Error.WriteLine(matrix);
@@ -501,8 +513,8 @@ namespace Tetris
                             validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = route;
                             if (endpos)
                             {
-                                int thisScore = GetScore(matrix);
-                                if (thisScore < bestScore)
+                                double thisScore = GetScore(matrix);
+                                if (thisScore > bestScore)
                                 {
                                     //Console.Error.WriteLine("Score: " + thisScore);
                                     //Console.Error.WriteLine(matrix);
@@ -610,68 +622,71 @@ namespace Tetris
 
         }
 
-        private int GetScore(Matrix matrix, bool calculateNextBlock = true)
+        private double GetScore(Matrix matrix, bool calculateNextBlock = true)
         {
-            int score = 0;
+            double score = 0;
             if (calculateNextBlock)
             {
                 score = GetSecondBlockScore(matrix);
             }
-            int highestPoint = 0;
-            bool highestPointSet = false;
-            for (int y = matrix.Height - 1; y >= 0; y--)
-            {
-                bool lineFull = true;
+            score += matrix.Score;
+            return score;
 
-                for (int x = 0; x < matrix.Width; x++)
-                {
-                    //lager is beter
-                    if (matrix[x, y] != 0)
-                    {
-                        if (!highestPointSet)
-                        {
-                            score+= (matrix.Height - y);
-                            highestPoint = y;
-                        }
-                    }
-                    else
-                    {
-                        lineFull = false;
-                    }
-                    //gaatjes zijn slechter
-                    if (y > 0 && matrix[x, y] == 0)
-                    {
+            //int highestPoint = 0;
+            //bool highestPointSet = false;
+            //for (int y = matrix.Height - 1; y >= 0; y--)
+            //{
+            //    bool lineFull = true;
 
-                        var suby = y - 1;
-                        var foundFilledIn = false;
-                        var penalty = 0;
-                        while (suby > 0)
-                        {
-                            penalty += suby;
-                            if (matrix[x, suby] != 0)
-                            {
-                                foundFilledIn = true;
-                                break;
-                            }
-                            suby--;
-                        }
-                        if (foundFilledIn)
-                        {
-                            score += 5;
-                        }
-                    }
-                    //lijnen weghalen is goed
-                    if (lineFull)
-                    {
-                        score--;
-                    }
-                }
-            }
-            //lager in totaal is beter
-            return score + ((_gamestate.Height - highestPoint));
+            //    for (int x = 0; x < matrix.Width; x++)
+            //    {
+            //        //lager is beter
+            //        if (matrix[x, y] != 0)
+            //        {
+            //            if (!highestPointSet)
+            //            {
+            //                score+= (matrix.Height - y);
+            //                highestPoint = y;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            lineFull = false;
+            //        }
+            //        //gaatjes zijn slechter
+            //        if (y > 0 && matrix[x, y] == 0)
+            //        {
+
+            //            var suby = y - 1;
+            //            var foundFilledIn = false;
+            //            var penalty = 0;
+            //            while (suby > 0)
+            //            {
+            //                penalty += suby;
+            //                if (matrix[x, suby] != 0)
+            //                {
+            //                    foundFilledIn = true;
+            //                    break;
+            //                }
+            //                suby--;
+            //            }
+            //            if (foundFilledIn)
+            //            {
+            //                score += 5;
+            //            }
+            //        }
+            //        //lijnen weghalen is goed
+            //        if (lineFull)
+            //        {
+            //            score--;
+            //        }
+            //    }
+            //}
+            ////lager in totaal is beter
+            //return score + ((_gamestate.Height - highestPoint));
         }
 
-        private int GetSecondBlockScore(Matrix matrix)
+        private double GetSecondBlockScore(Matrix matrix)
         {
             var start = findStartY();
             var blocks = GetBlockMatrix(_nextBlock);
@@ -679,7 +694,7 @@ namespace Tetris
             {
                 return 10000;
             }
-            int bestScore = int.MaxValue;
+            double bestScore = double.MinValue;
             bool[,,] validPositions = new bool[20 + ValidPosOffset, 20 + ValidPosOffset, 20 + ValidPosOffset];
             for (int i = 0; i < blocks.Count; i++)
             {
@@ -696,8 +711,8 @@ namespace Tetris
                             validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = true;
                             if (endpos)
                             {
-                                int thisScore = GetScore(matrix, false);
-                                if (thisScore < bestScore)
+                                double thisScore = GetScore(matrix, false);
+                                if (thisScore > bestScore)
                                 {
                                     bestScore = thisScore;
                                 }
@@ -722,8 +737,8 @@ namespace Tetris
                             validPositions[x + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] = true;
                             if (endpos)
                             {
-                                int thisScore = GetScore(matrix, false);
-                                if (thisScore < bestScore)
+                                double thisScore = GetScore(matrix, false);
+                                if (thisScore > bestScore)
                                 {
                                     bestScore = thisScore;
                                 }

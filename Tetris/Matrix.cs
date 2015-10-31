@@ -12,7 +12,7 @@ namespace Tetris
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-
+        public double Score { get; set; }
         public bool IsValid { get; set; }
 
         public Matrix(int width, int height)
@@ -98,6 +98,7 @@ namespace Tetris
 
         public void Add(Matrix matrix, int xPos, int yPos)
         {
+            var landingHeight = Height - yPos + (matrix.Height / 2);
             for (int x = 0; x < matrix.Width; x++)
             {
                 for (int y = 0; y < matrix.Height; y++)
@@ -135,8 +136,105 @@ namespace Tetris
                         }
                         _matrix[finalX, finalY]++;
                     }
+
                 }
             }
+            CalculateScore(landingHeight);
+        }
+
+        private void CalculateScore(int landingHeight)
+        {
+            int rowTransitions = 0;
+            int columnTransitions = 0;
+            int numberOfHoles = 0;
+
+            int removedLines = RemoveFullLines();
+            int wellSums = GetWellSums();
+
+
+            var height = Height;
+            var width = Width;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var curval = _matrix[x, y];
+                    if (y > 0 && curval == 0 && _matrix[x, y - 1] != 0)
+                    {
+                        numberOfHoles++;
+                    }
+                    if (x > 0 && curval != _matrix[x - 1, y])
+                    {
+                        rowTransitions++;
+                    }
+                    if (y > 0 && curval != _matrix[x, y - 1])
+                    {
+                        columnTransitions++;
+                    }
+                }
+            }
+
+            Score = landingHeight * -4.500158825082766 +
+                removedLines * 3.4181268101392694 +
+                rowTransitions * -3.2178882868487753 +
+                columnTransitions * -9.348695305445199 +
+                numberOfHoles * -7.899265427351652 +
+                wellSums * -3.3855972247263626;
+        }
+
+        private int GetWellSums()
+        {
+            var sum = 0;
+            var height = Height;
+            var width = Width;
+            int wellDepth = 0;
+            for (int x = 1; x < width - 1; x++)
+            {
+                wellDepth = 0;
+                for (int y = 1; y < height; y++)
+                {
+                    if (_matrix[x, y] == 0 && _matrix[x - 1, y] == 1 && _matrix[x + 1, y] == 1)
+                    {
+                        wellDepth++;
+                        sum += wellDepth;
+                    }
+                    if (_matrix[x, y] == 1)
+                    {
+                        wellDepth = 0;
+                    }
+                }
+            }
+
+            wellDepth = 0;
+            for (int y = 1; y < height; y++)
+            {
+                if (_matrix[0, y] == 0 && _matrix[1, y] == 1)
+                {
+                    wellDepth++;
+                    sum += wellDepth;
+                }
+                if (_matrix[0, y] == 1)
+                {
+                    wellDepth = 0;
+                }
+            }
+
+            wellDepth = 0;
+            for (int y = 1; y < height; y++)
+            {
+                if (_matrix[width - 1, y] == 0 && _matrix[width - 2, y] == 1)
+                {
+                    wellDepth++;
+                    sum += wellDepth;
+                }
+                if (_matrix[width - 1, y] == 1)
+                {
+                    wellDepth = 0;
+                }
+            }
+
+            return sum;
         }
 
         public bool CanAdd(Matrix block, int x, int y)
@@ -150,11 +248,11 @@ namespace Tetris
 
                     //if ((x + i) >= 0 && (x + i) < 10 && (y + j) >= 0 && (y + j) < 20)
                     //{
-                    
-                        if (block._matrix[i, j] != 0 && ((y+j) > 19 || (x+i) > 9 ||_matrix[x + i, y + j] != 0))
-                        {
-                            return false;
-                        }
+
+                    if (block._matrix[i, j] != 0 && ((y + j) > 19 || (x + i) > 9 || _matrix[x + i, y + j] != 0))
+                    {
+                        return false;
+                    }
                     //}
                     //else
                     //{
@@ -182,8 +280,9 @@ namespace Tetris
             return returnString;
         }
 
-        internal void RemoveFullLines()
+        internal int RemoveFullLines()
         {
+            int clearedLines = 0;
             var height = Height;
             var width = Width;
             for (int y = 0; y < height; y++)
@@ -199,6 +298,7 @@ namespace Tetris
                 }
                 if (lineFull)
                 {
+                    clearedLines++;
                     for (int suby = y; suby > 0; suby--)
                     {
                         for (int x = 0; x < width; x++)
@@ -207,6 +307,18 @@ namespace Tetris
                         }
                     }
                 }
+            }
+            return GetFactor(clearedLines);
+        }
+
+        internal int GetFactor(int clearedLines)
+        {
+            switch (clearedLines)
+            {
+                case 0:
+                    return 0;
+                default:
+                    return (int)Math.Pow(2.0, (double)clearedLines-1);
             }
         }
     }
