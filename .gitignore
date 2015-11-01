@@ -3,3 +3,7 @@ Tetris/obj/
 packages/
 Tetris.Test/bin/
 Tetris.Test/obj/
+*.psess
+*.vspx
+example_creator/
+Tetris.TestTests/
