@@ -1,2 +1,5 @@
 Tetris/bin/
 Tetris/obj/
+packages/
+Tetris.Test/bin/
+Tetris.Test/obj/

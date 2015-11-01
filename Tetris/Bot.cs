@@ -624,13 +624,15 @@ namespace Tetris
 
         private double GetScore(Matrix matrix, bool calculateNextBlock = true)
         {
-            double score = 0;
             if (calculateNextBlock)
             {
-                score = GetSecondBlockScore(matrix);
+                return GetSecondBlockScore(matrix);
             }
-            score += matrix.Score;
-            return score;
+            else
+            {
+                return matrix.Score;
+            }
+            
 
             //int highestPoint = 0;
             //bool highestPointSet = false;

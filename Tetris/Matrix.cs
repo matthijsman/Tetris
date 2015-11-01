@@ -14,7 +14,7 @@ namespace Tetris
         public int Height { get; private set; }
         public double Score { get; set; }
         public bool IsValid { get; set; }
-
+        public int RemovedLines { get; set; }
         public Matrix(int width, int height)
         {
             IsValid = true;
@@ -34,7 +34,7 @@ namespace Tetris
             IsValid = true;
             CopyMatrix(baseMatrix);
             //Normalize();
-            Add(blockMatrix, xpos, ypos);
+            Add(blockMatrix, xpos, ypos, baseMatrix.RemovedLines);
         }
 
         public Matrix(string fieldString)
@@ -96,7 +96,7 @@ namespace Tetris
             }
         }
 
-        public void Add(Matrix matrix, int xPos, int yPos)
+        public void Add(Matrix matrix, int xPos, int yPos, int baseRemovedLines)
         {
             var landingHeight = Height - yPos + (matrix.Height / 2);
             for (int x = 0; x < matrix.Width; x++)
@@ -139,16 +139,17 @@ namespace Tetris
 
                 }
             }
-            CalculateScore(landingHeight);
+            CalculateScore(landingHeight, baseRemovedLines);
         }
 
-        private void CalculateScore(int landingHeight)
+        private void CalculateScore(int landingHeight, int baseRemovedLines)
         {
             int rowTransitions = 0;
             int columnTransitions = 0;
             int numberOfHoles = 0;
 
             int removedLines = RemoveFullLines();
+            RemovedLines = removedLines;
             int wellSums = GetWellSums();
 
 
@@ -176,7 +177,8 @@ namespace Tetris
             }
 
             Score = landingHeight * -4.500158825082766 +
-                removedLines * 3.4181268101392694 +
+                GetFactor(baseRemovedLines) * 3.4181268101392694 +
+                GetFactor(removedLines) * 3.4181268101392694 +
                 rowTransitions * -3.2178882868487753 +
                 columnTransitions * -9.348695305445199 +
                 numberOfHoles * -7.899265427351652 +
@@ -308,7 +310,7 @@ namespace Tetris
                     }
                 }
             }
-            return GetFactor(clearedLines);
+            return clearedLines;
         }
 
         internal int GetFactor(int clearedLines)
