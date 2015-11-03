@@ -15,6 +15,9 @@ namespace Tetris
         public double Score { get; set; }
         public bool IsValid { get; set; }
         public int RemovedLines { get; set; }
+
+        public int SolidLines{get; set;}
+
         public Matrix(int width, int height)
         {
             IsValid = true;
@@ -39,14 +42,21 @@ namespace Tetris
 
         public Matrix(string fieldString)
         {
+            SolidLines = 0;
             IsValid = true;
             var fieldArray = fieldString.Split(';');
             Height = fieldArray.Length;
             Width = fieldArray[0].Split(',').Length;
             _matrix = new int[Width, Height];
+            
             for (int y = 0; y < Height; y++)
             {
                 var lineArray = fieldArray[y].Split(',');
+                if(int.Parse(lineArray[0].ToString()) == 3)
+                {
+                    SolidLines++;
+                }
+
                 for (int x = 0; x < Width; x++)
                 {
                     _matrix[x, y] = int.Parse(lineArray[x].ToString()) > 1 ? 1 : 0;
@@ -62,7 +72,7 @@ namespace Tetris
             var width = matrix.Width;
             Height = height;
             Width = width;
-
+            SolidLines = matrix.SolidLines;
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
@@ -177,8 +187,8 @@ namespace Tetris
             }
 
             Score = landingHeight * -4.500158825082766 +
-                GetFactor(baseRemovedLines) * 3.4181268101392694 +
-                GetFactor(removedLines) * 3.4181268101392694 +
+                GetFactor((baseRemovedLines!=0?baseRemovedLines:SolidLines)-SolidLines) * 3.4181268101392694 +
+                GetFactor(removedLines-SolidLines) * 3.4181268101392694 +
                 rowTransitions * -3.2178882868487753 +
                 columnTransitions * -9.348695305445199 +
                 numberOfHoles * -7.899265427351652 +
