@@ -26,6 +26,7 @@ namespace Tetris
         private string _block;
         private string _nextBlock;
         private int _blockX;
+        private int _blockY;
         private int _skips = 0;
         private const int ValidPosOffset =5;
         Matrix _gamestate;
@@ -1745,6 +1746,7 @@ namespace Tetris
                     break;
                 case "this_piece_position":
                     _blockX = int.Parse(lineArray[1].Split(',')[0]);
+                    _blockY = int.Parse(lineArray[1].Split(',')[1]);
                     break;
             }
         }
@@ -1754,10 +1756,7 @@ namespace Tetris
             switch (lineArray[0])
             {
                 case "field":
-                    if (!_debug || _gamestate == null)
-                    {
-                        ParseField(lineArray[1]);
-                    }
+                    ParseField(lineArray[1]);
                     break;
                 case "skips":
                     _skips = int.Parse(lineArray[1]);
@@ -1772,6 +1771,14 @@ namespace Tetris
             {
                 _gamestate = new Matrix(field);
             }
+            if (_debug)
+            {
+               // _gamestate.AddSolidLines((int)Math.Floor(_round / 15.0));
+            }
+            if(_debug && _round % 6 == 0)
+            {
+                _gamestate.AddGarbageLine();
+            }
         }
 
         private int _startY = 0;
@@ -1783,7 +1790,17 @@ namespace Tetris
             {
                 Console.WriteLine("no_moves");
             }
-            _startY = findStartY();
+
+            if(FindHighest() < 6)
+            {
+                Matrix.Panic = 1;
+            }
+            else
+            {
+                Matrix.Panic = 0;
+            }
+
+            _startY = 0;// findStartY();
             double bestScore = double.MinValue;
             string bestRoute = "";
             Matrix bestMatrix = null;
@@ -1797,6 +1814,25 @@ namespace Tetris
             for (int i = 0; i < blocks.Count; i++)
             {
                 var block = blocks[i];
+                var tempX = _blockX;
+                while (_gamestate.CanAdd(block, tempX, _startY))
+                {
+                    string route = "";
+                    for (int j = _blockY; j < _startY; j++)
+                    {
+                        route += "down,";
+                    }
+                    for (int j = 0; j < i; j++)
+                    {
+                        route += "turnleft,";
+                    }
+                    for(int j= tempX; j < _blockX; j++)
+                    {
+                        route += "left,";
+                    }
+                    validPositions[tempX + ValidPosOffset, _startY + ValidPosOffset, i + ValidPosOffset] = route.TrimEnd(',');
+                    tempX--;
+                }
                 for (int x = (0 - block.Width) + 2; x < _gamestate.Width - 1; x++)
                 {
                     for (int y = _startY; y < _height; y++)
@@ -1871,20 +1907,35 @@ namespace Tetris
                     _gamestate.RemoveFullLines();
                 }
             }
-
             Console.Error.WriteLine(bestMatrix);
-            Console.Error.WriteLine("Full lines: " + bestMatrix.RemovedLines + " Solid Lines: " + bestMatrix.SolidLines);
+            if(bestMatrix.RemovedLines - bestMatrix.SolidLines == 2)
+            {
+                _TotalDoublesCleared++;
+            }
+            if (bestMatrix.RemovedLines - bestMatrix.SolidLines == 3)
+            {
+                _TotalTriplesCleared++;
+            }
+            if (bestMatrix.RemovedLines - bestMatrix.SolidLines == 4)
+            {
+                _TotalQuadsCleared++;
+            }
+            Console.Error.WriteLine("Full lines: " + bestMatrix.RemovedLines + " Solid Lines: " + bestMatrix.SolidLines + " TotalDoubles: " + _TotalDoublesCleared + " TotalTriples: " + _TotalTriplesCleared + " TotalQuads: " + _TotalQuadsCleared);
             Console.WriteLine(bestRoute);
         }
 
-        private int findStartY()
+        private int _TotalDoublesCleared = 0;
+        private int _TotalTriplesCleared = 0;
+        private int _TotalQuadsCleared = 0;
+
+        private int FindHighest()
         {
             int highestPoint = 0;
-            for (int y = 0; y > _height; y++)
+            for (int y = 0; y < _height; y++)
             {
                 for (int x = 0; x < _gamestate.Width; x++)
                 {
-                    if (_gamestate[x, y] != 0)
+                    if (_gamestate[x, y] > 0)
                     {
                         return Math.Max(y,0);
                     }
@@ -1895,33 +1946,37 @@ namespace Tetris
 
         private string GetValidRoute(int x, int y, int i, string[,,] validPositions)
         {
-            string route = "";
-            if (y <= _startY)
-            {
-                for (int j = 0; j < _startY; j++)
-                {
-                    route += "down,";
-                }
-                int steps = x - _blockX;
-                for (int j = 0; j < i; j++)
-                {
-                    route += "turnleft,";
-                }
-                for (int j = 0; j < Math.Abs(steps); j++)
-                {
-                    if (steps < 0)
-                    {
-                        route += "left,";
-                    }
-                    if (steps > 0)
-                    {
-                        route += "right,";
-                    }
-                }
-                route += "down,";
-                route = route.Trim(',');
-            }
+            //string route = "";
+            //if (y <= _startY)
+            //{
+            //    for (int j = 0; j < _startY; j++)
+            //    {
+            //        route += "down,";
+            //    }
+            //    int steps = x - _blockX;
+            //    for (int j = 0; j < i; j++)
+            //    {
+            //        route += "turnleft,";
+            //    }
+            //    for (int j = 0; j < Math.Abs(steps); j++)
+            //    {
+            //        if (steps < 0)
+            //        {
+            //            route += "left,";
+            //        }
+            //        if (steps > 0)
+            //        {
+            //            route += "right,";
+            //        }
+            //    }
+            //    route += "down,";
+            //    route = route.Trim(',');
+            //}
             //else there is already a route near this one. get the route from that pos and add the step we need to get here.
+            if (!string.IsNullOrEmpty(validPositions[x + ValidPosOffset, y - 1 + ValidPosOffset, i + ValidPosOffset]))
+            {
+                return validPositions[x + ValidPosOffset, y - 1 + ValidPosOffset, i + ValidPosOffset] + "," + "down";
+            }
             if (!string.IsNullOrEmpty(validPositions[x - 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset]))
             {
                 return validPositions[x - 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] + "," + "right";
@@ -1929,10 +1984,6 @@ namespace Tetris
             if (!string.IsNullOrEmpty(validPositions[x + 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset]))
             {
                 return validPositions[x + 1 + ValidPosOffset, y + ValidPosOffset, i + ValidPosOffset] + "," + "left";
-            }
-            if (!string.IsNullOrEmpty(validPositions[x + ValidPosOffset, y - 1 + ValidPosOffset, i + ValidPosOffset]))
-            {
-                return validPositions[x + ValidPosOffset, y - 1 + ValidPosOffset, i + ValidPosOffset] + "," + "down";
             }
             if (!string.IsNullOrEmpty(validPositions[x + ValidPosOffset, y + ValidPosOffset, i - 1 + ValidPosOffset]))
             {
@@ -1942,7 +1993,7 @@ namespace Tetris
             {
                 return validPositions[x + ValidPosOffset, y + ValidPosOffset, i + 1 + ValidPosOffset] + "," + "turnright";
             }
-            return route;
+            return null;
         }
 
         private void MoveStuff()
@@ -1968,7 +2019,7 @@ namespace Tetris
         private double GetSecondBlockScore(Matrix matrix)
         {
             Matrix bestOne = null;
-            var start = findStartY();
+            var start = 0;// findStartY();
             var blocks = GetBlockMatrix(_nextBlock);
             if (blocks == null || blocks.Count == 0)
             {

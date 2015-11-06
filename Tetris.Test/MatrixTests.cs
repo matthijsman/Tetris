@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.VisualStudio;
+using System.Diagnostics;
+
 namespace Tetris.Test
 {
     [TestFixture]
@@ -24,7 +26,14 @@ namespace Tetris.Test
         [Test]
         public void doTest()
         {
-            Assert.Pass();
+            var matrix = new Matrix("0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,2,0,0,0,2,0,2;0,0,2,2,2,2,2,2,2,2;2,0,2,2,2,2,2,2,2,2;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3");
+            Console.WriteLine(matrix);
+            matrix.AddGarbageLine();
+            matrix.AddGarbageLine();
+            matrix.AddGarbageLine();
+            matrix.AddGarbageLine();
+            Console.WriteLine(matrix);
+
         }
     }
 }

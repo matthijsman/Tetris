@@ -9,14 +9,14 @@ namespace Tetris
     public class Matrix
     {
         private int[,] _matrix;
-
+        public static int Panic;
         public int Width { get; private set; }
         public int Height { get; private set; }
         public double Score { get; set; }
         public bool IsValid { get; set; }
         public int RemovedLines { get; set; }
-
-        public int SolidLines{get; set;}
+        private Random _Random = new Random();
+        public int SolidLines { get; set; }
 
         public Matrix(int width, int height)
         {
@@ -48,18 +48,21 @@ namespace Tetris
             Height = fieldArray.Length;
             Width = fieldArray[0].Split(',').Length;
             _matrix = new int[Width, Height];
-            
+
             for (int y = 0; y < Height; y++)
             {
                 var lineArray = fieldArray[y].Split(',');
-                if(int.Parse(lineArray[0].ToString()) == 3)
+                if (int.Parse(lineArray[0].ToString()) == 3)
                 {
                     SolidLines++;
                 }
 
                 for (int x = 0; x < Width; x++)
                 {
-                    _matrix[x, y] = int.Parse(lineArray[x].ToString()) > 1 ? 1 : 0;
+                    if (y != 0 || (x != 3 && x != 4 && x != 5 && x != 6))
+                    {
+                        _matrix[x, y] = int.Parse(lineArray[x].ToString()) > 1 ? 1 : 0;
+                    }
                 }
 
             }
@@ -108,7 +111,7 @@ namespace Tetris
 
         public void Add(Matrix matrix, int xPos, int yPos, int baseRemovedLines)
         {
-            var landingHeight = Height - yPos + (matrix.Height / 2);
+            var landingHeight = (int)((Height - yPos) * (Panic == 1 ? 3 : 1) + (matrix.Height / 2));
             for (int x = 0; x < matrix.Width; x++)
             {
                 for (int y = 0; y < matrix.Height; y++)
@@ -186,9 +189,11 @@ namespace Tetris
                 }
             }
 
+            var firstBlockRemovedLines = (baseRemovedLines != 0 ? baseRemovedLines : SolidLines) - SolidLines;
+
             Score = landingHeight * -4.500158825082766 +
-                GetFactor((baseRemovedLines!=0?baseRemovedLines:SolidLines)-SolidLines) * 3.4181268101392694 +
-                GetFactor(removedLines-SolidLines) * 3.4181268101392694 +
+                GetFactor(firstBlockRemovedLines) * 3.4181268101392694 +
+                GetFactor(removedLines + (firstBlockRemovedLines > 1 ? 1 : 0) - SolidLines) * 3.4181268101392694 +
                 rowTransitions * -3.2178882868487753 +
                 columnTransitions * -9.348695305445199 +
                 numberOfHoles * -7.899265427351652 +
@@ -261,7 +266,7 @@ namespace Tetris
                     //if ((x + i) >= 0 && (x + i) < 10 && (y + j) >= 0 && (y + j) < 20)
                     //{
 
-                    if (block._matrix[i, j] != 0 && ((y + j) > 19 || (x + i) > 9 || _matrix[x + i, y + j] != 0))
+                    if (block._matrix[i, j] != 0 && ((y + j) > 19 || (x + i) > 9 || (x + i) < 0 || _matrix[x + i, y + j] != 0))
                     {
                         return false;
                     }
@@ -329,9 +334,57 @@ namespace Tetris
             {
                 case 0:
                     return 0;
+                case 1:
+                    return 1;
                 default:
-                    return (int)Math.Pow(2.0, (double)clearedLines-1);
+                    return (int)Math.Pow(2.0, (double)clearedLines - 1);
             }
+        }
+
+        internal void AddGarbageLine()
+        {
+            Console.Error.WriteLine("Added garbage line");
+            var height = Height;
+            var width = Width;
+            int num = _Random.Next(0, Width);
+            for (int y = 1; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    _matrix[x, y - 1] = _matrix[x, y];
+                    if (y == height - 1)
+                    {
+                        _matrix[x, y] = 1;
+                        if (x == num)
+                        {
+                            _matrix[x, y] = 0;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        internal void AddSolidLines(int v)
+        {
+            var height = Height;
+            var width = Width;
+            for (var i = 0; i < v; i++)
+            {
+                for (int y = 1; y < height - 1; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        _matrix[x, y - 1] = _matrix[x, y];
+                        if (y == height - 1)
+                        {
+                            _matrix[x, y] = 1;
+                        }
+                    }
+                }
+            }
+            SolidLines = v;
+            Console.Error.WriteLine(this);
         }
     }
 }
