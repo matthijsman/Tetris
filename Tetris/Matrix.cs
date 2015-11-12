@@ -192,7 +192,7 @@ namespace Tetris
             var firstBlockRemovedLines = (baseRemovedLines != 0 ? baseRemovedLines : SolidLines) - SolidLines;
 
             Score = landingHeight * -4.500158825082766 +
-                GetFactor(firstBlockRemovedLines) * 3.4181268101392694 +
+              //  GetFactor(firstBlockRemovedLines) * 3.4181268101392694 +
                 GetFactor(removedLines + (firstBlockRemovedLines > 1 ? 1 : 0) - SolidLines) * 3.4181268101392694 +
                 rowTransitions * -3.2178882868487753 +
                 columnTransitions * -9.348695305445199 +

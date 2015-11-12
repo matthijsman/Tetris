@@ -63,18 +63,18 @@ namespace Tetris
             //ParseLine("settings your_bot player2".Split(' '));
             //ParseLine("settings field_width 10".Split(' '));
             //ParseLine("settings field_height 20".Split(' '));
-            //ParseLine("update game round 72".Split(' '));
-            //ParseLine("update game this_piece_type T".Split(' '));
+            //ParseLine("update game round 81".Split(' '));
+            //ParseLine("update game this_piece_type L".Split(' '));
             //ParseLine("update game next_piece_type I".Split(' '));
             //ParseLine("update game this_piece_position 3,-1".Split(' '));
-            //ParseLine("update player2 row_points 20".Split(' '));
+            //ParseLine("update player2 row_points 18".Split(' '));
             //ParseLine("update player2 combo 0".Split(' '));
             //ParseLine("update player2 skips 0".Split(' '));
-            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;2,0,0,0,2,2,0,0,0,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,0,0,2,2,2;2,2,0,2,2,2,2,2,2,2;2,2,2,2,2,0,0,2,2,2;2,2,2,2,0,2,2,2,2,2;0,2,2,2,0,2,2,2,2,2;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3".Split(' '));
-            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,2,2,0,0,0,0,0;0,0,2,2,2,2,0,0,2,0;2,2,0,2,2,2,2,2,2,2;2,2,2,2,2,0,2,2,2,2;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3".Split(' '));
-            //ParseLine("update player1 row_points 28".Split(' '));
+            //ParseLine("update player2 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,2,0,0,0,0,0,0,0;2,2,2,2,0,0,0,0,0,0;2,2,2,2,2,0,0,0,0,0;2,2,2,2,2,2,0,0,0,2;2,2,2,2,2,2,0,2,2,2;2,2,2,2,2,2,0,2,2,2;2,0,2,2,2,2,2,2,2,2;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3".Split(' '));
+            //ParseLine("update player1 field 0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,2,2,2,2,2,2,0,2,0;0,2,2,2,2,2,2,2,2,0;2,2,2,2,0,2,2,2,2,2;2,2,2,0,2,2,2,0,2,2;2,2,2,0,2,2,2,2,2,2;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3".Split(' '));
+            //ParseLine("update player1 row_points 12".Split(' '));
             //ParseLine("update player1 combo 0".Split(' '));
-            //ParseLine("update player1 skips 1".Split(' '));
+            //ParseLine("update player1 skips 0".Split(' '));
             //ParseLine("action moves 10000".Split(' '));
             //Console.ReadLine();
             ParseLine("settings timebank 10000".Split(' '));
@@ -2008,7 +2008,7 @@ namespace Tetris
         {
             if (calculateNextBlock)
             {
-                return GetSecondBlockScore(matrix) + matrix.Score;
+                return 10*GetSecondBlockScore(matrix) + matrix.Score;
             }
             else
             {
@@ -2082,7 +2082,12 @@ namespace Tetris
                     }
                 }
             }
- 
+            //Console.Error.WriteLine("FirstBlock:");
+            //Console.Error.WriteLine(matrix);
+            //Console.Error.WriteLine("SecondBlock:");
+            //Console.Error.WriteLine(bestOne);
+            //Console.Error.WriteLine("Score:");
+            //Console.Error.WriteLine(matrix.Score + bestOne.Score);
             return bestScore;
         }
 
